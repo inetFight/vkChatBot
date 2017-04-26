@@ -58,11 +58,14 @@ public class App {
 		TransportClient transportClient = new HttpTransportClient();
 		VkApiClient vk = new VkApiClient(transportClient);
 		GroupActor actor = new GroupActor(Integer.parseInt(groupId), apikey);
+		
+		
 		while(true){
 			
 		List<Message> msg = vk.messages().get(actor).count(200).execute().getItems();
 		
 		for (int i = 0; i < msg.size(); i++) {
+			System.out.println(msg.get(i).getBody());
 			if(isLong(msg.get(i).getBody())){
 			String response = Tracking.TrackingDocument(msg.get(i).getBody());
 			vk.messages()
@@ -70,6 +73,8 @@ public class App {
 			.message(response)
 			.userId(msg.get(i).getUserId())
 			.randomId((int)Math.random())
+//			.lat((float) 48.4708055)
+//			.lng((float) 25.2996523)
 			.peerId(Integer.parseInt(groupId))
 			.forwardMessages(Integer.toString(msg.get(i).getId()))
 			.execute();
